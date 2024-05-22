@@ -8,7 +8,6 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 TOLERANCE = 50
-
 # For webcam input:
 cap = cv2.VideoCapture(0)
 with mp_hands.Hands(
@@ -42,21 +41,26 @@ with mp_hands.Hands(
         image_height = 900
         current_mouse_position = pyautogui.position()
         pyautogui.moveTo(1440-(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width),hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height)
+
         index_x = 1440-(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width)
         index_y = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height
         thumb_x = 1440-(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].x * image_width)
         thumb_y = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y * image_height
-        print(
-                f'Index finger tip coordinates: (',
-                f'{1440-(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width)}, '
-                f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height})'
-            )
+        middle_x = 1440-(hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x * image_width)
+        middle_y = (hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y * image_width)
+
+        print(f"X: {index_x} Y: {index_y}")
         
         #this is also, but i wrote it initially. i asked gpt what the hell was wrong and it fixed the pop problem
         #also rewrote this code and i like this more...
-        if abs(thumb_x - index_x) <= TOLERANCE and abs(thumb_y - index_y) <= TOLERANCE:
-            pyautogui.click(index_x, index_y)
-            print("clicked")
+        if abs(thumb_x - index_x) <= TOLERANCE:
+            pyautogui.scroll(4)
+            print("scroll up")
+
+        if abs(middle_x - index_x) <= TOLERANCE:
+            pyautogui.scroll(-4)
+            print("scroll down")
+
 
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
