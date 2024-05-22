@@ -66,11 +66,11 @@ with mp_hands.Hands(
             pyautogui.rightClick(index_x, index_y)
             print("rc")
         
-        if abs(thumb_x - index_x) <= TOL-20:
+          if abs(thumb_x - index_x) <= TOL-20 and abs(thumb_y - thumb_y) <= TOL-20:
             pyautogui.scroll(4)
             print("scu")
 
-        if abs(middle_x - index_x) <= TOL-20:
+          if abs(middle_x - index_x) <= TOL and abs(middle_y - index_y) <= TOL:
             pyautogui.scroll(-4)
             print("scd")
 
