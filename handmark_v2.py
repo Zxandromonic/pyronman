@@ -8,14 +8,13 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 TOL = 50
-
 # For webcam input:
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 with mp_hands.Hands(
-  model_complexity=0,
-  max_num_hands=1,
-  min_detection_confidence=0.5,
-  min_tracking_confidence=0.5) as hands:
+    model_complexity=0,
+    max_num_hands=1,
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5) as hands:
   while cap.isOpened():
     success, image = cap.read()
     if not success:
@@ -33,14 +32,16 @@ with mp_hands.Hands(
     if results.multi_hand_landmarks:
       for hand_landmarks in results.multi_hand_landmarks:
         mp_drawing.draw_landmarks(
-          image,
-          hand_landmarks,
-          mp_hands.HAND_CONNECTIONS,
-          mp_drawing_styles.get_default_hand_landmarks_style(),
-          mp_drawing_styles.get_default_hand_connections_style())
+            image,
+            hand_landmarks,
+            mp_hands.HAND_CONNECTIONS,
+            mp_drawing_styles.get_default_hand_landmarks_style(),
+            mp_drawing_styles.get_default_hand_connections_style())
         image_width = 1440
         image_height = 900
-        
+        current_mouse_position = pyautogui.position()
+        pyautogui.moveTo(1440-(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width),hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height)
+
         current_mouse_position = pyautogui.position()
         index_x = 1440-(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width)
         index_y = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height
@@ -64,11 +65,17 @@ with mp_hands.Hands(
           if abs(ring_x - thumb_x) <= TOL and abs(ring_y - thumb_y) <= TOL:
             pyautogui.rightClick(index_x, index_y)
             print("rc")
+        
+        if abs(thumb_x - index_x) <= TOL-20:
+            pyautogui.scroll(4)
+            print("scu")
 
-          if abs(index_x - middle_x) <= TOL and abs(index_y - middle_y) <= TOL:
-            pyautogui.scroll(0)
+        if abs(middle_x - index_x) <= TOL-20:
+            pyautogui.scroll(-4)
+            print("scd")
 
 
+    # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
     if cv2.waitKey(5) & 0xFF == 27:
       break
