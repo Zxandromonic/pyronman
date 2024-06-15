@@ -66,17 +66,23 @@ with mp_hands.Hands(
             pyautogui.rightClick(index_x, index_y)
             print("rc")
         
-          if abs(thumb_x - index_x) <= TOL-20 and abs(thumb_y - thumb_y) <= TOL-20:
-            pyautogui.scroll(4)
-            print("scu")
-
-          if abs(middle_x - index_x) <= TOL and abs(middle_y - index_y) <= TOL:
+#          if abs(ring_x - pinky_x) <= TOL-40 and abs(ring_y - ring_y) <= TOL-30:
+#            pyautogui.scroll(4)
+#            print("scu")
+#
+#          if abs(middle_x - ring_x) <= TOL-40 and abs(middle_y - middle_y) <= TOL-30:
+#            pyautogui.scroll(-4)
+#            print("scd")
+          
+          if abs(ring_x - pinky_x) <= TOL-20 and abs(ring_y -pinky_y) >=TOL+40 and abs(thumb_x - pinky_y) <TOL+500:
             pyautogui.scroll(-4)
-            print("scd")
-
+            print("scd")    
+          if abs(ring_x - pinky_x) <= TOL-20 and abs(ring_y -pinky_y) <=TOL+5 and abs(thumb_x - pinky_y) <TOL+500:
+            pyautogui.scroll(4)
+            print("scu")           
 
     # Flip the image horizontally for a selfie-view display.
-    cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+    cv2.imshow("Jarvis and Friday ain't got shit on us", cv2.flip(image, 1))
     if cv2.waitKey(5) & 0xFF == 27:
       break
 cap.release()
